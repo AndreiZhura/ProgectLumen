@@ -1,3 +1,4 @@
 <?php
-require("./blockPHP/metateg");
-require("./blockPHP/form");
+require("./blockPHP/metateg.php");
+require("./blockPHP/form.php");
+require("./blockPHP/scripts.php");
