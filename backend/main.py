@@ -1,36 +1,36 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from fastapi.middleware.cors import CORSMiddleware
-from users.users import router as user_router
+from fastapi import FastAPI, Request
+import os
+import requests
+from dotenv import load_dotenv
 
+load_dotenv()
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:5500",   # адрес твоего фронтенда, например
-    "http://127.0.0.1:5500",
-    # Можно добавить другие, или просто "*"
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,  # или ["*"] для разрешения с любых адресов
-    allow_credentials=True,
-    allow_methods=["*"],    # разрешаем все методы, включая OPTIONS
-    allow_headers=["*"],    # разрешаем все заголовки
-)
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+BOT_API_URL = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/"
 
 @app.get("/")
 async def root():
-   
-    return {"message": f"Привет, я Lumen! я только учусь "}
+    return {"message": "Бот Lumen запущен"}
 
+@app.post("/webhook")
+async def telegram_webhook(req: Request):
+    data = await req.json()
 
-class Userinput(BaseModel):
-    name:str
+    if "message" in data:
+        chat_id = data["message"]["chat"]["id"]
+        user_text = data["message"].get("text", "")
 
-@app.post("/hello")
-async def hello(user:Userinput):
-    return {"message": f"Привет, {user.name}! Я Lumen."}
+        reply = f"Lumen: Привет! Ты написал: {user_text}"
+        send_message(chat_id, reply)
 
-app.include_router(user_router)
+    return {"ok": True}
+
+def send_message(chat_id, text):
+    resp = requests.post(
+        BOT_API_URL + "sendMessage",
+        json={"chat_id": chat_id, "text": text}
+    )
+    if not resp.ok:
+        print(f"Ошибка при отправке сообщения: {resp.status_code} {resp.text}")
