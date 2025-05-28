@@ -1,0 +1,1 @@
+import {handleRegistration} from './registration';

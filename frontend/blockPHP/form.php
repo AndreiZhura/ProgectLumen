@@ -1,7 +1,13 @@
 
 <body>
-    <form id="nameForm">
-        <input type="text"
+    <header class="header">
+        <button class="registration" id="btnregistration">Зарегестрироваться</button>
+        <button class="login" id="btnlogin">Войти в аккаунт</button>
+    </header>
+    <form class="form" id="nameForm">
+        <input
+        class="name"
+        type="text"
         id="nameInput"
         placeholder="Введите имя"
         required
