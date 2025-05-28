@@ -16,7 +16,4 @@
     </form>
     <p id="response"></p>
 
-    <script type="module" src="../js/main.js"></script>
-
-</body>
-</html>
+ 
