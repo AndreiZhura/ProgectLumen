@@ -22,7 +22,8 @@ async def telegram_webhook(req: Request):
         chat_id = data["message"]["chat"]["id"]
         user_text = data["message"].get("text", "")
 
-        reply = f"Lumen: Привет! Ты написал: {user_text}"
+        from lumen_core.logic.reasoner import generate_reply
+        reply = generate_reply(user_text)
         send_message(chat_id, reply)
 
     return {"ok": True}
